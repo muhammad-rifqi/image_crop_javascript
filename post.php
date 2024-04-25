@@ -10,13 +10,6 @@ $convert = base64_decode($exp[1],true);
 $im = imagecreatefromstring($convert);
 if ($im !== false) {
     header('Content-Type: image/jpeg');
-    // $percent = 0.5;
-    // $width = imagesx($im);
-    // $height = imagesy($im);
-    // $newwidth = $width * $percent;
-    // $newheight = $height * $percent;
-    // $img = imagecreatetruecolor($newwidth,$newheight);
-    // imagecopyresized($img,$im,0,0,0,0,$newwidth,$newheight,$width,$height);
     imagejpeg($im,$dir);
     imagedestroy($im);
     echo json_encode(array("success"=>true));
