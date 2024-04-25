@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,13 +15,9 @@
 </head>
 
 <body>
-
-    <img src="picture.jpg" id="target">
-    <label> X: </label> <input type="number" size="4" id="x" />
-    <label> Y: </label> <input type="number" size="4" id="y" />
-    <label> Width: </label> <input type="number" size="4" id="width" />
-    <label> Height: </label> <input type="number" size="4" id="height" />
-
+    <div>
+        <img src="picture.jpg" id="target">
+    </div>
     <div>
         <canvas id="image-preview"> </canvas>
     </div>
@@ -35,18 +32,13 @@
 <script>
     window.addEventListener("load", (e) => {
         $("#target").Jcrop({
-            aspectRatio: 1,
             allowResize: true,
             onSelect: cropImage
         })
     })
 
     function cropImage(event) {
-        document.getElementById("x").value = event.x;
-        document.getElementById("y").value = event.y;
-        document.getElementById("width").value = event.w;
-        document.getElementById("height").value = event.h;
-
+ 
         var img = new Image();
         img.src = document.getElementById("target").getAttribute('src');
         img.addEventListener("load", function () {
@@ -57,12 +49,21 @@
             ctx.drawImage(img, event.x, event.y, event.w, event.h, 0, 0, canvas.width, canvas.height);
         })
         img.crossOrigin = "anonymous";
+
     }
 
     function saveImage() {
         var ctx = document.getElementById('image-preview').getContext('2d');
         var base64 = ctx.canvas.toDataURL("image/jpeg");
-        console.log(base64)
+        fetch('post.php', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({"images": base64})
+        }).then(res => res.json())
+            .then((res) => {alert(res?.success)});
     }
 </script>
 
